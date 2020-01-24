@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.NewsDetailActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleGravity="start|top"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:scrimAnimationDuration="1000">
+
+
+            <ImageView
+                android:id="@+id/ivNewsImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/iv_headline_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/news_sample" />
+
+            <ImageView
+                android:id="@+id/ivPublisher"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/margin_large"
+                android:src="@drawable/thevoice_logo" />
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="Details"
+                app:titleTextColor="@color/color_full_white" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tvPublication"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:text="@string/txt_sample_publisher_name"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNewsHeadLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:lineSpacingMultiplier="1.3"
+                android:text="@string/txt_sample_headline"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_regular_3x"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPublishedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:text="@string/txt_sample_published_date"
+                android:textSize="@dimen/text_smaller" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_xxlarge"
+                android:lineSpacingMultiplier="1.3"
+                android:padding="@dimen/margin_medium"
+                android:text="@string/sample_news_content" />
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:src="@drawable/ic_favorite_border_black_24dp"
+        android:tint="@color/color_full_white"
+        app:fabSize="normal"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="end|bottom" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
