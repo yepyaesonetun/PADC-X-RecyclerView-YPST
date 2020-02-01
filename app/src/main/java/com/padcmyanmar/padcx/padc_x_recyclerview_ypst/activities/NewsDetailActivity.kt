@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 
-class NewsDetailActivity : AppCompatActivity() {
+class NewsDetailActivity : BaseActivity() {
 
     companion object {
         fun newItent(context: Context): Intent {

@@ -8,5 +8,4 @@ import androidx.recyclerview.widget.RecyclerView
  * on 2020-01-18.
  */
 
-open class BaseNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-}
+open class BaseNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
