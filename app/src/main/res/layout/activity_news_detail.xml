@@ -59,6 +59,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/vpEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/view_pod_empty"/>
 
             <TextView
                 android:id="@+id/tvPublication"
@@ -90,6 +95,7 @@
                 android:textSize="@dimen/text_smaller" />
 
             <TextView
+                android:id="@+id/tvNewsDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"

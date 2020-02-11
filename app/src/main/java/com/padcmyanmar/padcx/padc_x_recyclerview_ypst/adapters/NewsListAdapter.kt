@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.delegates.NewsItemDelegate
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewholder.BaseNewsViewHolder
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewholder.BaseViewHolder
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewholder.NewsSmallViewHolder
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewholder.NewsViewHolder
 
@@ -14,7 +16,7 @@ import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewholder.NewsViewH
  * on 2020-01-18.
  */
 
-class NewsListAdapter(delegate: NewsItemDelegate) : RecyclerView.Adapter<BaseNewsViewHolder>() {
+class NewsListAdapter(delegate: NewsItemDelegate) : BaseRecyclerAdapter<BaseNewsViewHolder,NewsVO>(){
 
     val mDelegate: NewsItemDelegate = delegate
     val VIEW_TYPE_LARGE = 2244
@@ -31,7 +33,7 @@ class NewsListAdapter(delegate: NewsItemDelegate) : RecyclerView.Adapter<BaseNew
             VIEW_TYPE_SMALL -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_news_smalll, parent, false)
-                return NewsSmallViewHolder(view)
+                return NewsSmallViewHolder(view, mDelegate)
             }
             else -> {
                 val view =
@@ -39,14 +41,6 @@ class NewsListAdapter(delegate: NewsItemDelegate) : RecyclerView.Adapter<BaseNew
                 return NewsViewHolder(view, mDelegate)
             }
         }
-
-    }
-
-    override fun getItemCount(): Int {
-        return 12
-    }
-
-    override fun onBindViewHolder(holder: BaseNewsViewHolder, position: Int) {
 
     }
 

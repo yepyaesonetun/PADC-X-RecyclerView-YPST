@@ -6,5 +6,5 @@ package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.delegates
  */
 
 interface NewsItemDelegate {
-    fun onTapNewsItem()
+    fun onTapNewsItem(newsId : Int)
 }

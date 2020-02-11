@@ -1,48 +1,98 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.recyclerview.widget.GridLayoutManager
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.adapters.NewsListAdapter
-import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.DummyNewsModelImpl
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModel
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModelImpl
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.delegates.NewsItemDelegate
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewpods.EmptyViewPod
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), NewsItemDelegate {
 
 
-    private val mNewsModel : NewsModel = NewsModelImpl
+    private val mNewsModel: NewsModel = NewsModelImpl
+    private lateinit var mAdapter: NewsListAdapter
+
+    private lateinit var viewPodEmpty: EmptyViewPod
+
+    private val compositeDisposable : CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        hideEmptyView()
+        setUpSwipeRefresh()
+        setUpRecyclerView()
+        requestData()
+        setUpViewPod()
+    }
 
-        //showAlert("Title", "Message")
+    private fun setUpViewPod() {
+        viewPodEmpty = vpEmpty as EmptyViewPod
+        viewPodEmpty.setEmptyData(
+            "There are no news available",
+            "https://point-broadband.com/wp-content/uploads/2017/06/No-data-caps-graphic-e1497904686711.png"
+        )
+    }
 
-        val adapter = NewsListAdapter(this)
+    private fun setUpSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            requestData()
+        }
+    }
 
+    private fun setUpRecyclerView() {
+        mAdapter = NewsListAdapter(this)
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        val gridLayoutManager = GridLayoutManager(this, 3)
-
         rvNews.layoutManager = linearLayoutManager
+        rvNews.adapter = mAdapter
+    }
 
-        rvNews.adapter = adapter
-
-        showSnackbar("This is News List")
+    private fun requestData() {
+        swipeRefreshLayout.isRefreshing = true
 
         mNewsModel.getAllNews()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    swipeRefreshLayout.isRefreshing = false
+                    if (it.isNotEmpty()) {
+                        mAdapter.setNewData(it.toMutableList())
+                    } else {
+                        showEmptyView()
+                    }
+                }, {
+                    showSnackbar(it.localizedMessage)
+                    swipeRefreshLayout.isRefreshing = false
+                    showEmptyView()
+                }
+            )
+            .addTo(compositeDisposable)
+    }
 
+    private fun showEmptyView() {
+        vpEmpty.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyView() {
+        vpEmpty.visibility = View.GONE
     }
 
 
-    override fun onTapNewsItem() {
-        startActivity(NewsDetailActivity.newItent(this))
+    override fun onTapNewsItem(newsId: Int) {
+        startActivity(NewsDetailActivity.newItent(this, newsId))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
 }
