@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModel
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModelImpl
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
 import kotlinx.android.synthetic.main.activity_news_detail.*
 
 class NewsDetailActivity : BaseActivity() {
@@ -23,15 +26,20 @@ class NewsDetailActivity : BaseActivity() {
         }
     }
 
-    private var mNewsModel : NewsModel = NewsModelImpl
+    private var mNewsModel : NewsModel = NewsModelImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
 
         val newsId = intent.getIntExtra(NEWS_ID_EXTRA, 0)
-        val news = mNewsModel.getNewsById(newsId)
+        mNewsModel.getNewsById(newsId)
+            .observe(this, Observer {
+                bindData(it)
+            })
+    }
 
+    private fun bindData(news : NewsVO){
         tvNewsHeadLine.text = news.title
 
         Glide.with(this)
@@ -39,5 +47,9 @@ class NewsDetailActivity : BaseActivity() {
             .into(ivNewsImage)
 
         tvNewsDescription.text = news.description
+
+        news.comments.forEach {
+            Log.e("ccc", it.commentMessage)
+        }
     }
 }

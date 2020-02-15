@@ -61,9 +61,10 @@
 
             <include
                 android:id="@+id/vpEmpty"
+                android:visibility="gone"
+                layout="@layout/view_pod_empty"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout="@layout/view_pod_empty"/>
+                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/tvPublication"

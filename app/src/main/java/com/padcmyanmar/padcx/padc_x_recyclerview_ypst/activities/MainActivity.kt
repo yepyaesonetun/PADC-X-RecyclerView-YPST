@@ -1,7 +1,9 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.adapters.NewsListAdapter
@@ -18,16 +20,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity(), NewsItemDelegate {
 
 
-    private val mNewsModel: NewsModel = NewsModelImpl
+    private lateinit var mNewsModel: NewsModel
     private lateinit var mAdapter: NewsListAdapter
 
     private lateinit var viewPodEmpty: EmptyViewPod
 
-    private val compositeDisposable : CompositeDisposable = CompositeDisposable()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mNewsModel = NewsModelImpl(this)
+
         hideEmptyView()
         setUpSwipeRefresh()
         setUpRecyclerView()
@@ -59,23 +64,20 @@ class MainActivity : BaseActivity(), NewsItemDelegate {
     private fun requestData() {
         swipeRefreshLayout.isRefreshing = true
 
-        mNewsModel.getAllNews()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    swipeRefreshLayout.isRefreshing = false
-                    if (it.isNotEmpty()) {
-                        mAdapter.setNewData(it.toMutableList())
-                    } else {
-                        showEmptyView()
-                    }
-                }, {
-                    showSnackbar(it.localizedMessage)
-                    swipeRefreshLayout.isRefreshing = false
-                    showEmptyView()
-                }
-            )
-            .addTo(compositeDisposable)
+        mNewsModel.getAllNews(onError = {
+
+            swipeRefreshLayout.isRefreshing = false
+            showEmptyView()
+            Log.e("error", it)
+
+        }).observe(this, Observer {
+
+            swipeRefreshLayout.isRefreshing = false
+            if (it.isNotEmpty()) {
+                hideEmptyView()
+                mAdapter.setNewData(it.toMutableList())
+            }
+        })
     }
 
     private fun showEmptyView() {

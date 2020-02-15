@@ -21,9 +21,9 @@ abstract class BaseModel {
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(mOkHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(mOkHttpClient)
             .build()
 
         mNewsApi = retrofit.create(NewsApi::class.java)
