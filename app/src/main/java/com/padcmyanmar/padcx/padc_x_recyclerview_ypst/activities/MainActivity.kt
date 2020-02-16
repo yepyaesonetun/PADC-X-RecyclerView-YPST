@@ -12,15 +12,12 @@ import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModelImpl
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.delegates.NewsItemDelegate
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewpods.EmptyViewPod
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), NewsItemDelegate {
 
 
-    private lateinit var mNewsModel: NewsModel
+    private val mNewsModel: NewsModel = NewsModelImpl
     private lateinit var mAdapter: NewsListAdapter
 
     private lateinit var viewPodEmpty: EmptyViewPod
@@ -30,8 +27,6 @@ class MainActivity : BaseActivity(), NewsItemDelegate {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mNewsModel = NewsModelImpl(this)
 
         hideEmptyView()
         setUpSwipeRefresh()

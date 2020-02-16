@@ -12,20 +12,15 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class NewsModelImpl(var context: Context) : NewsModel, BaseModel() {
-
-    private val mTheDB: NewsDB = NewsDB.getDBInstance(context)
+object NewsModelImpl : NewsModel, BaseModel() {
 
     override fun getAllNews(onError: (String) -> Unit): LiveData<List<NewsVO>> {
-
-        getAllNewsFromApiAndSaveToDatabase(onError)
-
         return mTheDB.newsDao()
             .getAllNews()
     }
 
     @SuppressLint("CheckResult")
-    private fun getAllNewsFromApiAndSaveToDatabase(onError: (String) -> Unit) {
+    override fun getAllNewsFromApiAndSaveToDatabase(onSuccess: () -> Unit, onError: (String) -> Unit) {
         mNewsApi
             .getAllNews(DUMMY_ACCESS_TOKEN)
             .map { it.data?.toList() ?: listOf() }

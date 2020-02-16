@@ -7,5 +7,7 @@ import io.reactivex.Observable
 interface NewsModel {
     fun getAllNews(onError: (String) -> Unit) : LiveData<List<NewsVO>>
 
+    fun getAllNewsFromApiAndSaveToDatabase(onSuccess: () -> Unit, onError: (String) -> Unit)
+
     fun getNewsById(newsId: Int) : LiveData<NewsVO>
 }

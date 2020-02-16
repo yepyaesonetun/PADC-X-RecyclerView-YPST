@@ -1,6 +1,8 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models
 
+import android.content.Context
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.network.NewsApi
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.persistence.db.NewsDB
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.utils.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -10,7 +12,8 @@ import java.util.concurrent.TimeUnit
 
 abstract class BaseModel {
 
-    protected var mNewsApi : NewsApi
+    protected var mNewsApi: NewsApi
+    protected lateinit var mTheDB: NewsDB
 
     init {
         val mOkHttpClient = OkHttpClient.Builder()
@@ -27,5 +30,9 @@ abstract class BaseModel {
             .build()
 
         mNewsApi = retrofit.create(NewsApi::class.java)
+    }
+
+    fun initDatabase(context: Context) {
+        mTheDB = NewsDB.getDBInstance(context)
     }
 }

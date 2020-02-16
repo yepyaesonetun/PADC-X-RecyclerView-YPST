@@ -12,11 +12,12 @@ import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.persistence.daos.NewsDao
  * on 2020-02-14.
  */
 
-@Database(entities = [NewsVO::class], version = 6)
+@Database(entities = [NewsVO::class], version = 7, exportSchema = false)
 abstract class NewsDB : RoomDatabase() {
     companion object {
         val DB_NAME = "PADC_NEWS_X.DB"
         var dbInstance: NewsDB? = null
+
         fun getDBInstance(context: Context): NewsDB {
             when (dbInstance) {
                 null -> {

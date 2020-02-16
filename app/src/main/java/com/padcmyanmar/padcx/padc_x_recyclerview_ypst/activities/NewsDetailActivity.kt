@@ -26,7 +26,7 @@ class NewsDetailActivity : BaseActivity() {
         }
     }
 
-    private var mNewsModel : NewsModel = NewsModelImpl(this)
+    private var mNewsModel : NewsModel = NewsModelImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

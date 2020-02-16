@@ -1,10 +1,7 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.persistence.daos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
 
 /**
@@ -27,9 +24,9 @@ interface NewsDao {
     @Delete
     fun deleteNews(note: NewsVO)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNews(noteVO: NewsVO)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllNews(news: List<NewsVO>)
 }
