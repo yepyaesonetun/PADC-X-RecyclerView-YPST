@@ -1,5 +1,5 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.mvp.presenters
 
-interface NewsDetailsPresenter {
-    fun onUiReady()
-}
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.mvp.views.NewsDetailsView
+
+interface NewsDetailsPresenter : BasePresenter<NewsDetailsView>

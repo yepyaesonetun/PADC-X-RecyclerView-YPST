@@ -1,78 +1,107 @@
 package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.adapters.NewsListAdapter
-import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModel
-import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModelImpl
-import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.delegates.NewsItemDelegate
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.mvp.presenters.MainPresenter
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.mvp.presenters.MainPresenterImpl
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.mvp.views.MainView
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.utils.EMPTY_IMAGE_URL
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.utils.EM_NO_NEWS_AVAILABLE
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.veiws.viewpods.EmptyViewPod
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), NewsItemDelegate {
+class MainActivity : BaseActivity(), MainView {
 
-
-    private val mNewsModel: NewsModel = NewsModelImpl
     private lateinit var mAdapter: NewsListAdapter
 
     private lateinit var viewPodEmpty: EmptyViewPod
 
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setUpPresenter()
+
         hideEmptyView()
         setUpSwipeRefresh()
         setUpRecyclerView()
-        requestData()
         setUpViewPod()
+        mPresenter.onCreate()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mPresenter.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mPresenter.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mPresenter.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mPresenter.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.onDestroy()
+    }
+
+
+    override fun displayNewsList(newsList: List<NewsVO>) {
+        mAdapter.setNewData(newsList.toMutableList())
+    }
+
+    override fun navigateToNewsDetails(newsId: Int) {
+        startActivity(NewsDetailActivity.newItent(this, newsId))
+    }
+
+    override fun displayEmptyView() {
+        showEmptyView()
+    }
+
+    override fun enableSwipeRefresh() {
+        swipeRefreshLayout.isRefreshing = true
+    }
+
+    override fun disableSwipeRefresh() {
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    private fun setUpPresenter(){
+        mPresenter = MainPresenterImpl()
+        mPresenter.initPresenter(this)
     }
 
     private fun setUpViewPod() {
         viewPodEmpty = vpEmpty as EmptyViewPod
-        viewPodEmpty.setEmptyData(
-            "There are no news available",
-            "https://point-broadband.com/wp-content/uploads/2017/06/No-data-caps-graphic-e1497904686711.png"
-        )
+        viewPodEmpty.setEmptyData(EM_NO_NEWS_AVAILABLE, EMPTY_IMAGE_URL)
     }
 
     private fun setUpSwipeRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
-            requestData()
+            mPresenter.onSwipeRefresh()
         }
     }
 
     private fun setUpRecyclerView() {
-        mAdapter = NewsListAdapter(this)
+        mAdapter = NewsListAdapter(mPresenter)
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvNews.layoutManager = linearLayoutManager
         rvNews.adapter = mAdapter
-    }
-
-    private fun requestData() {
-        swipeRefreshLayout.isRefreshing = true
-
-        mNewsModel.getAllNews(onError = {
-
-            swipeRefreshLayout.isRefreshing = false
-            showEmptyView()
-            Log.e("error", it)
-
-        }).observe(this, Observer {
-
-            swipeRefreshLayout.isRefreshing = false
-            if (it.isNotEmpty()) {
-                hideEmptyView()
-                mAdapter.setNewData(it.toMutableList())
-            }
-        })
     }
 
     private fun showEmptyView() {
@@ -83,13 +112,4 @@ class MainActivity : BaseActivity(), NewsItemDelegate {
         vpEmpty.visibility = View.GONE
     }
 
-
-    override fun onTapNewsItem(newsId: Int) {
-        startActivity(NewsDetailActivity.newItent(this, newsId))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
 }
