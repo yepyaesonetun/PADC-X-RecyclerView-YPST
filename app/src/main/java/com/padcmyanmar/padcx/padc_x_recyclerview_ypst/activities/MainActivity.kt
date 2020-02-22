@@ -2,6 +2,7 @@ package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.activities
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.adapters.NewsListAdapter
@@ -32,32 +33,7 @@ class MainActivity : BaseActivity(), MainView {
         setUpSwipeRefresh()
         setUpRecyclerView()
         setUpViewPod()
-        mPresenter.onCreate()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mPresenter.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mPresenter.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mPresenter.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mPresenter.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mPresenter.onDestroy()
+        mPresenter.onUiReady(this)
     }
 
     override fun displayNewsList(newsList: List<NewsVO>) {
@@ -80,8 +56,8 @@ class MainActivity : BaseActivity(), MainView {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    private fun setUpPresenter(){
-        mPresenter = MainPresenterImpl()
+    private fun setUpPresenter() {
+        mPresenter = ViewModelProviders.of(this).get(MainPresenterImpl::class.java)
         mPresenter.initPresenter(this)
     }
 
@@ -92,7 +68,7 @@ class MainActivity : BaseActivity(), MainView {
 
     private fun setUpSwipeRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
-            mPresenter.onSwipeRefresh()
+            mPresenter.onSwipeRefresh(this)
         }
     }
 

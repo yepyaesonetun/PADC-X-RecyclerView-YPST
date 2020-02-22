@@ -12,7 +12,7 @@ class NewsApp : Application() {
 
         NewsModelImpl.initDatabase(applicationContext)
 
-        getNewsOneTime()
+//        getNewsOneTime()
 //        getNewsPeriodically()
 //        getNewsWhileInDozeMode()
     }
