@@ -60,7 +60,6 @@ class MainActivity : BaseActivity(), MainView {
         mPresenter.onDestroy()
     }
 
-
     override fun displayNewsList(newsList: List<NewsVO>) {
         mAdapter.setNewData(newsList.toMutableList())
     }
