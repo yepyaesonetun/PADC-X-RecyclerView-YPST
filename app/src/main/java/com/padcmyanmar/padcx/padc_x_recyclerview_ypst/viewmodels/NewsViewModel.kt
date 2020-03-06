@@ -21,6 +21,9 @@ class NewsViewModel : ViewModel(), NewsItemDelegate {
 
     private val navigateToNewsDetailsLiveData: MutableLiveData<Int> = MutableLiveData()
 
+    private val enableSwipeRefreshLiveData: MutableLiveData<Unit> = MutableLiveData()
+    private val disableSwipeRefreshLiveData: MutableLiveData<Unit> = MutableLiveData()
+
     fun getNewsListLiveData(): LiveData<List<NewsVO>> {
         return newsListLiveData
     }
@@ -31,6 +34,26 @@ class NewsViewModel : ViewModel(), NewsItemDelegate {
 
     fun getNavigateToNewsDetailsLiveData(): LiveData<Int> {
         return navigateToNewsDetailsLiveData
+    }
+
+    fun getEnableSwipeRefreshLiveData() : LiveData<Unit>{
+        return enableSwipeRefreshLiveData
+    }
+
+    fun getDisableSwipeRefreshLiveData() : LiveData<Unit>{
+        return disableSwipeRefreshLiveData
+    }
+
+    fun onSwipeRefresh() {
+        enableSwipeRefreshLiveData.postValue(Unit)
+        mNewsModel.getAllNewsFromApiAndSaveToDatabase(
+            onSuccess = {
+                disableSwipeRefreshLiveData.postValue(Unit)
+            }, onError = {
+                disableSwipeRefreshLiveData.postValue(Unit)
+                errorLiveData.postValue(it)
+            }
+        )
     }
 
     override fun onTapNewsItem(newsId: Int) {

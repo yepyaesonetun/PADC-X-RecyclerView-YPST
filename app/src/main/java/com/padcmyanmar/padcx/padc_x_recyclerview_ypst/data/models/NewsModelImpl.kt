@@ -28,6 +28,7 @@ object NewsModelImpl : NewsModel, BaseModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 mTheDB.newsDao().insertAllNews(it)
+                onSuccess()
             },{
                 onError(it.localizedMessage ?: EM_NO_INTERNET_CONNECTION)
             })

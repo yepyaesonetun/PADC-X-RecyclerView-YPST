@@ -38,14 +38,17 @@ class MainActivity : BaseActivity() {
         hideEmptyView()
         setUpSwipeRefresh()
         setUpRecyclerView()
-        //requestData()
         setUpViewPod()
         setUpDataObservations()
     }
 
     private fun setUpDataObservations(){
         mViewModel.getNewsListLiveData().observe(this, Observer {
-            mAdapter.setNewData(it.toMutableList())
+            if(it.isEmpty()){
+                showEmptyView()
+            } else {
+                mAdapter.setNewData(it.toMutableList())
+            }
         })
 
         mViewModel.getErrorLiveData().observe(this, Observer {
@@ -54,6 +57,14 @@ class MainActivity : BaseActivity() {
 
         mViewModel.getNavigateToNewsDetailsLiveData().observe(this, Observer {
             startActivity(NewsDetailActivity.newItent(this, it))
+        })
+
+        mViewModel.getEnableSwipeRefreshLiveData().observe(this, Observer {
+            swipeRefreshLayout.isRefreshing = true
+        })
+
+        mViewModel.getDisableSwipeRefreshLiveData().observe(this, Observer {
+            swipeRefreshLayout.isRefreshing = false
         })
     }
 
@@ -71,7 +82,7 @@ class MainActivity : BaseActivity() {
 
     private fun setUpSwipeRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
-            //requestData()
+            mViewModel.onSwipeRefresh()
         }
     }
 
@@ -82,25 +93,6 @@ class MainActivity : BaseActivity() {
         rvNews.adapter = mAdapter
     }
 
-//    private fun requestData() {
-//        swipeRefreshLayout.isRefreshing = true
-//
-//        mNewsModel.getAllNews(onError = {
-//
-//            swipeRefreshLayout.isRefreshing = false
-//            showEmptyView()
-//            Log.e("error", it)
-//
-//        }).observe(this, Observer {
-//
-//            swipeRefreshLayout.isRefreshing = false
-//            if (it.isNotEmpty()) {
-//                hideEmptyView()
-//                mAdapter.setNewData(it.toMutableList())
-//            }
-//        })
-//    }
-
     private fun showEmptyView() {
         vpEmpty.visibility = View.VISIBLE
     }
@@ -108,11 +100,6 @@ class MainActivity : BaseActivity() {
     private fun hideEmptyView() {
         vpEmpty.visibility = View.GONE
     }
-
-
-//    override fun onTapNewsItem(newsId: Int) {
-//        startActivity(NewsDetailActivity.newItent(this, newsId))
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
