@@ -20,17 +20,19 @@ object NewsModelImpl : NewsModel, BaseModel() {
     }
 
     @SuppressLint("CheckResult")
-    override fun getAllNewsFromApiAndSaveToDatabase(onSuccess: () -> Unit, onError: (String) -> Unit) {
-        mNewsApi
+    override fun getAllNewsFromApiAndSaveToDatabase(): Observable<List<NewsVO>> {
+        return mNewsApi
             .getAllNews(DUMMY_ACCESS_TOKEN)
             .map { it.data?.toList() ?: listOf() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe ({
+            .doOnNext {
                 mTheDB.newsDao().insertAllNews(it)
-            },{
-                onError(it.localizedMessage ?: EM_NO_INTERNET_CONNECTION)
-            })
+            }
+//            .subscribe ({
+//            },{
+//                onError(it.localizedMessage ?: EM_NO_INTERNET_CONNECTION)
+//            })
     }
 
 
