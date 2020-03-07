@@ -3,6 +3,7 @@ package com.padcmyanmar.padcx.padc_x_recyclerview_ypst.persistence.daos
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
+import io.reactivex.Observable
 
 /**
  * Created by Ye Pyae Sone Tun
@@ -13,7 +14,7 @@ import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
 interface NewsDao {
 
     @Query("SELECT * FROM news")
-    fun getAllNews(): LiveData<List<NewsVO>>
+    fun getAllNews(): Observable<List<NewsVO>>
 
     @Query("SELECT * FROM news WHERE id = :noteId")
     fun getNewsById(noteId: Int) : LiveData<NewsVO>

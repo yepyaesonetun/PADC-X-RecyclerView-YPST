@@ -5,7 +5,7 @@ import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
 import io.reactivex.Observable
 
 interface NewsModel {
-    fun getAllNews(onError: (String) -> Unit) : LiveData<List<NewsVO>>
+    fun getAllNews() : Observable<List<NewsVO>>
 
     fun getAllNewsFromApiAndSaveToDatabase(onSuccess: () -> Unit, onError: (String) -> Unit)
 

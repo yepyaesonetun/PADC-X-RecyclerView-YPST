@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
 
 object NewsModelImpl : NewsModel, BaseModel() {
 
-    override fun getAllNews(onError: (String) -> Unit): LiveData<List<NewsVO>> {
+    override fun getAllNews(): Observable<List<NewsVO>> {
         return mTheDB.newsDao()
             .getAllNews()
     }
