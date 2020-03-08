@@ -7,41 +7,61 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.NewsApp
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.R
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModel
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.models.NewsModelImpl
 import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.data.vos.NewsVO
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.viper.NewsDetailContract
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.viper.interactor.NewsDetailsInterActor
+import com.padcmyanmar.padcx.padc_x_recyclerview_ypst.viper.presenters.NewsDetailPresenter
 import kotlinx.android.synthetic.main.activity_news_detail.*
+import ru.terrakok.cicerone.Router
 
-class NewsDetailActivity : BaseActivity() {
+class NewsDetailActivity : BaseActivity(), NewsDetailContract.View {
 
     companion object {
 
-        val TAG = "NewsDetailsActivity"
+        const val TAG = "NewsDetailsActivity"
 
-        const val NEWS_ID_EXTRA = "News Id Extra"
+        private const val NEWS_ID_EXTRA = "News Id Extra"
 
-        fun newItent(context: Context, newsId : Int): Intent {
-            val intent =  Intent(context, NewsDetailActivity::class.java)
+        fun newIntent(context: Context, newsId: Int): Intent {
+            val intent = Intent(context, NewsDetailActivity::class.java)
             intent.putExtra(NEWS_ID_EXTRA, newsId)
             return intent
         }
     }
 
-    private var mNewsModel : NewsModel = NewsModelImpl
+    private lateinit var mPresenter: NewsDetailPresenter
+
+    private val router: Router? by lazy {
+        NewsApp.INSTANCE.cicerone.router
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
 
         val newsId = intent.getIntExtra(NEWS_ID_EXTRA, 0)
-        mNewsModel.getNewsById(newsId)
-            .observe(this, Observer {
-                bindData(it)
-            })
+        setUpPresenter()
+        mPresenter.onUiReady(newsId)
     }
 
-    private fun bindData(news : NewsVO){
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.onUiDestroyed()
+    }
+
+    private fun setUpPresenter() {
+        mPresenter = NewsDetailPresenter(this, NewsDetailsInterActor(), router)
+    }
+
+    override fun displayNewsDetails(news: NewsVO) {
+        bindData(news)
+    }
+
+    private fun bindData(news: NewsVO) {
         tvNewsHeadLine.text = news.title
 
         Glide.with(this)

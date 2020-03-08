@@ -39,7 +39,7 @@ class NewsListActivity : BaseActivity(), NewsListContract.View {
                 val newsId = command.transitionData as Int
                 when (command.screenKey) {
                     NewsDetailActivity.TAG -> startActivity(
-                        NewsDetailActivity.newItent(
+                        NewsDetailActivity.newIntent(
                             applicationContext,
                             newsId
                         )
