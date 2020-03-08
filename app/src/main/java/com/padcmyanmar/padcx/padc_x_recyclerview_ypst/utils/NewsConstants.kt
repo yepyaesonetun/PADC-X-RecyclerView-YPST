@@ -11,3 +11,5 @@ const val DUMMY_ACCESS_TOKEN = "1212aAGNhurntRRjarajr"
 
 //Error Messages
 const val EM_NO_INTERNET_CONNECTION = "No Internet Connection"
+const val EM_NO_NEWS_AVAILABLE = "There are no news available"
+const val EM_EMPTY_IMAGE = "https://point-broadband.com/wp-content/uploads/2017/06/No-data-caps-graphic-e1497904686711.png"

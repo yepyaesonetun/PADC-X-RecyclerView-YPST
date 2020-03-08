@@ -17,6 +17,8 @@ class NewsDetailActivity : BaseActivity() {
 
     companion object {
 
+        val TAG = "NewsDetailsActivity"
+
         const val NEWS_ID_EXTRA = "News Id Extra"
 
         fun newItent(context: Context, newsId : Int): Intent {
